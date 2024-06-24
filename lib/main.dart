@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Call to Action',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: const HomeScreen(),

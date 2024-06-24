@@ -3,6 +3,7 @@ import 'package:callout/fetaures/screens/widgets/yt_subscribe_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:render/render.dart';
 import 'dart:typed_data';
 import 'dart:html' as html;
 
@@ -11,6 +12,7 @@ class EditScreen extends StatelessWidget {
 
   final HomeController _homeController = Get.find<HomeController>();
   final ScreenshotController screenshotController = ScreenshotController();
+  final RenderController renderController = RenderController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,24 +39,36 @@ class EditScreen extends StatelessWidget {
                       child: Screenshot(
                         controller: screenshotController,
                         child: Obx(
-                          () => YoutbeSubcribeButton(
-                            channelName:
-                                _homeController.channelName.value.isEmpty
-                                    ? _homeController.defaultchannelName
-                                    : _homeController.channelName.value,
-                            channelSubscribe:
-                                _homeController.channelSubscribers.value.isEmpty
-                                    ? _homeController.defaultchannelSubscribers
-                                    : _homeController.channelSubscribers.value,
+                          () => Render(
+                            controller: renderController,
+                            child: YoutbeSubcribeButton(
+                              channelName:
+                                  _homeController.channelName.value.isEmpty
+                                      ? _homeController.defaultchannelName
+                                      : _homeController.channelName.value,
+                              channelSubscribe: _homeController
+                                      .channelSubscribers.value.isEmpty
+                                  ? _homeController.defaultchannelSubscribers
+                                  : _homeController.channelSubscribers.value,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _captureAndSavePng,
-                    child: const Text('Download Subscribe Button'),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: _captureAndSavePng,
+                        child: const Text('Download Subscribe Button as PNG'),
+                      ),
+                      const SizedBox(width: 16),
+                      // ElevatedButton(
+                      //   onPressed: _captureAndSaveVideo,
+                      //   child: const Text('Download Subscribe Button as Video'),
+                      // ),
+                    ],
                   ),
                 ],
               ),
@@ -109,4 +123,24 @@ class EditScreen extends StatelessWidget {
       html.Url.revokeObjectUrl(url);
     }
   }
+
+  // Future<void> _captureAndSaveVideo() async {
+  //   final result = await renderController.captureMotion(
+  //     Duration(seconds: 3),
+  //     format: MotionFormat.mp4, // Updated to RenderFormat.webm
+  //   );
+
+  //   if (result != null) {
+  //     final blob = html.Blob([result.output]);
+  //     final url = html.Url.createObjectUrlFromBlob(blob);
+  //     final anchor = html.document.createElement('a') as html.AnchorElement
+  //       ..href = url
+  //       ..style.display = 'none'
+  //       ..download = 'youtube_subscribe_button.mp4';
+  //     html.document.body!.children.add(anchor);
+  //     anchor.click();
+  //     html.document.body!.children.remove(anchor);
+  //     html.Url.revokeObjectUrl(url);
+  //   }
+  // }
 }
